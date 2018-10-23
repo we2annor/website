@@ -1,0 +1,315 @@
+Git Release Notes
+=================
+
+Backward Compatibility Notes
+----------------------------
+
+ * "git branch -l <foo>" used to be a way to ask a reflog to be
+   created while creating a new branch, but that is no longer the
+   case.  It is a short-hand for "git branch --list <foo>" now.
+
+ * "git push" into refs/tags/* hierarchy is rejected without getting
+   forced, but "git fetch" (misguidedly) used the "fast forwarding"
+   rule used for the refs/heads/* hierarchy; this has been corrected,
+   which means some fetches of tags that did not fail with older
+   version of Git will fail without "--force" with this version.
+
+ * "git help -a" now gives verbose output (same as "git help -av").
+   Those who want the old output may say "git help --no-verbose -a"..
+
+
+Updates since v2.19
+-------------------
+
+UI, Workflows & Features
+
+ * Running "git clone" against a project that contain two files with
+   pathnames that differ only in cases on a case insensitive
+   filesystem would result in one of the files lost because the
+   underlying filesystem is incapable of holding both at the same
+   time.  An attempt is made to detect such a case and warn.
+
+ * "git checkout -b newbranch [HEAD]" should not have to do as much as
+   checking out a commit different from HEAD.  An attempt is made to
+   optimize this special case.
+
+ * "git rev-list --stdin </dev/null" used to be an error; it now shows
+   no output without an error.  "git rev-list --stdin --default HEAD"
+   still falls back to the given default when nothing is given on the
+   standard input.
+
+ * Lift code from GitHub to restrict delta computation so that an
+   object that exists in one fork is not made into a delta against
+   another object that does not appear in the same forked repository.
+
+ * "git format-patch" learned new "--interdiff" and "--range-diff"
+   options to explain the difference between this version and the
+   previous attempt in the cover letter (or after the tree-dashes as
+   a comment).
+
+ * "git mailinfo" used in "git am" learned to make a best-effort
+   recovery of a patch corrupted by MUA that sends text/plain with
+   format=flawed option.
+   (merge 3aa4d81f88 rs/mailinfo-format-flowed later to maint).
+
+ * The rules used by "git push" and "git fetch" to determine if a ref
+   can or cannot be updated were inconsistent; specifically, fetching
+   to update existing tags were allowed even though tags are supposed
+   to be unmoving anchoring points.  "git fetch" was taught to forbid
+   updates to existing tags without the "--force" option.
+
+ * "git multi-pack-index" learned to detect corruption in the .midx
+   file it uses, and this feature has been integrated into "git fsck".
+
+ * Generation of (experimental) commit-graph files have so far been
+   fairly silent, even though it takes noticeable amount of time in a
+   meaningfully large repository.  The users will now see progress
+   output.
+
+ * The minimum version of Windows supported by Windows port fo Git is
+   now set to Vista.
+
+ * The completion script (in contrib/) learned to complete a handful of
+   options "git stash list" command takes.
+
+ * The completion script (in contrib/) learned that "git fetch
+   --multiple" only takes remote names as arguments and no refspecs.
+
+ * "git status" learns to show progress bar when refreshing the index
+   takes a long time.
+   (merge ae9af12287 nd/status-refresh-progress later to maint).
+
+ * "git help -a" and "git help -av" give different pieces of
+   information, and generally the "verbose" version is more friendly
+   to the new users.  "git help -a" by default now uses the more
+   verbose output (with "--no-verbose", you can go back to the
+   original).  Also "git help -av" now lists aliases and external
+   commands, which it did not used to.
+
+ * Unlike "grep", "git grep" by default recurses to the whole tree.
+   The command learned "git grep --recursive" option, so that "git
+   grep --no-recursive" can serve as a synonym to setting the
+   max-depth to 0.
+
+ * When pushing into a repository that borrows its objects from an
+   alternate object store, "git receive-pack" that responds to the
+   push request on the other side lists the tips of refs in the
+   alternate to reduce the amount of objects transferred.  This
+   sometimes is detrimental when the number of refs in the alternate
+   is absurdly large, in which case the bandwidth saved in potentially
+   fewer objects transferred is wasted in excessively large ref
+   advertisement.  The alternate refs that are advertised are now
+   configurable with a pair of configuration variables.
+
+
+Performance, Internal Implementation, Development Support etc.
+
+ * When there are too many packfiles in a repository (which is not
+   recommended), looking up an object in these would require
+   consulting many pack .idx files; a new mechanism to have a single
+   file that consolidates all of these .idx files is introduced.
+
+ * "git submodule update" is getting rewritten piece-by-piece into C.
+
+ * The code for computing history reachability has been shuffled,
+   obtained a bunch of new tests to cover them, and then being
+   improved.
+
+ * The unpack_trees() API used in checking out a branch and merging
+   walks one or more trees along with the index.  When the cache-tree
+   in the index tells us that we are walking a tree whose flattened
+   contents is known (i.e. matches a span in the index), as linearly
+   scanning a span in the index is much more efficient than having to
+   open tree objects recursively and listing their entries, the walk
+   can be optimized, which has been done.
+
+ * When creating a thin pack, which allows objects to be made into a
+   delta against another object that is not in the resulting pack but
+   is known to be present on the receiving end, the code learned to
+   take advantage of the reachability bitmap; this allows the server
+   to send a delta against a base beyond the "boundary" commit.
+
+ * spatch transformation to replace boolean uses of !hashcmp() to
+   newly introduced oideq() is added, and applied, to regain
+   performance lost due to support of multiple hash algorithms.
+
+ * Fix a bug in which the same path could be registered under multiple
+   worktree entries if the path was missing (for instance, was removed
+   manually).  Also, as a convenience, expand the number of cases in
+   which --force is applicable.
+
+ * Split Documentation/config.txt for easier maintenance.
+   (merge 6014363f0b nd/config-split later to maint).
+
+ * Test helper binaries clean-up.
+   (merge c9a1f4161f nd/test-tool later to maint).
+
+ * Various tests have been updated to make it easier to swap the
+   hash function used for object identification.
+   (merge ae0c89d41b bc/hash-independent-tests later to maint).
+
+ * Update fsck.skipList implementation and documentation.
+   (merge 371a655074 ab/fsck-skiplist later to maint).
+
+ * An alias that expands to another alias has so far been forbidden,
+   but now it is allowed to create such an alias.
+
+ * Various test scripts have been updated for style and also correct
+   handling of exit status of various commands.
+
+ * "gc --auto" ended up calling exit(-1) upon error, which has been
+   corrected to use exit(1).  Also the error reporting behaviour when
+   daemonized has been updated to exit with zero status when stopping
+   due to a previously discovered error (which implies there is no
+   point running gc to improve the situation); we used to exit with
+   failure in such a case.
+
+ * Various codepaths in the core-ish part learned to work on an
+   arbitrary in-core index structure, not necessarily the default
+   instance "the_index".
+   (merge b3c7eef9b0 nd/the-index later to maint).
+
+ * Code clean-up in the internal machinery used by "git status" and
+   "git commit --dry-run".
+   (merge 73ba5d78b4 ss/wt-status-committable later to maint).
+
+ * Some environment variables that control the runtime options of Git
+   used during tests are getting renamed for consistency.
+   (merge 4231d1ba99 bp/rename-test-env-var later to maint).
+
+ * A new extension to the index file has been introduced, which allows
+   the index file to be read in parallel for performance.
+
+ * The oidset API was built on top of the oidmap API which in turn is
+   on the hashmap API.  Replace the implementation to build on top of
+   the khash API and gain performance.
+
+ * Over some transports, fetching objects with an exact commit object
+   name can be done without first seeing the ref advertisements.  The
+   code has been optimized to exploit this.
+
+ * In a partial clone that will lazily be hydrated from the
+   originating repository, we generally want to avoid "does this
+   object exist (locally)?" on objects that we deliberately omitted
+   when we created the clone.  The cache-tree codepath (which is used
+   to write a tree object out of the index) however insisted that the
+   object exists, even for paths that are outside of the partial
+   checkout area.  The code has been updated to avoid such a check.
+
+
+Fixes since v2.19
+-----------------
+
+ * "git interpret-trailers" and its underlying machinery had a buggy
+   code that attempted to ignore patch text after commit log message,
+   which triggered in various codepaths that will always get the log
+   message alone and never get such an input.
+   (merge 66e83d9b41 jk/trailer-fixes later to maint).
+
+ * Malformed or crafted data in packstream can make our code attempt
+   to read or write past the allocated buffer and abort, instead of
+   reporting an error, which has been fixed.
+
+ * "git rebase -i" did not clear the state files correctly when a run
+   of "squash/fixup" is aborted and then the user manually amended the
+   commit instead, which has been corrected.
+   (merge 10d2f35436 js/rebase-i-autosquash-fix later to maint).
+
+ * When fsmonitor is in use, after operation on submodules updates
+   .gitmodules, we lost track of the fact that we did so and relied on
+   stale fsmonitor data.
+   (merge 43f1180814 bp/mv-submodules-with-fsmonitor later to maint).
+
+ * Fix for a long-standing bug that leaves the index file corrupt when
+   it shrinks during a partial commit.
+   (merge 6c003d6ffb jk/reopen-tempfile-truncate later to maint).
+
+ * Further fix for O_APPEND emulation on Windows
+   (merge eeaf7ddac7 js/mingw-o-append later to maint).
+
+ * A corner case bugfix in "git rerere" code.
+   (merge ad2bf0d9b4 en/rerere-multi-stage-1-fix later to maint).
+
+ * "git add ':(attr:foo)'" is not supported and is supposed to be
+   rejected while the command line arguments are parsed, but we fail
+   to reject such a command line upfront.
+   (merge 84d938b732 nd/attr-pathspec-fix later to maint).
+
+ * Recent update broke the reachability algorithm when refs (e.g.
+   tags) that point at objects that are not commit were involved,
+   which has been fixed.
+
+ * "git rebase" etc. in Git 2.19 fails to abort when given an empty
+   commit log message as result of editing, which has been corrected.
+   (merge a3ec9eaf38 en/sequencer-empty-edit-result-aborts later to maint).
+
+ * The code to backfill objects in lazily cloned repository did not
+   work correctly, which has been corrected.
+   (merge e68302011c jt/lazy-object-fetch-fix later to maint).
+
+ * Update error messages given by "git remote" and make them consistent.
+   (merge 5025425dff ms/remote-error-message-update later to maint).
+
+ * "git update-ref" learned to make both "--no-deref" and "--stdin"
+   work at the same time.
+   (merge d345e9fbe7 en/update-ref-no-deref-stdin later to maint).
+
+ * Recently added "range-diff" had a corner-case bug to cause it
+   segfault, which has been corrected.
+   (merge e467a90c7a tg/range-diff-corner-case-fix later to maint).
+
+ * The recently introduced commit-graph auxiliary data is incompatible
+   with mechanisms such as replace & grafts that "breaks" immutable
+   nature of the object reference relationship.  Disable optimizations
+   based on its use (and updating existing commit-graph) when these
+   incompatible features are in use in the repository.
+   (merge 829a321569 ds/commit-graph-with-grafts later to maint).
+
+ * The mailmap file update.
+   (merge 255eb03edf jn/mailmap-update later to maint).
+
+ * The code in "git status" sometimes hit an assertion failure.  This
+   was caused by a structure that was reused without cleaning the data
+   used for the first run, which has been corrected.
+   (merge 3e73cc62c0 en/status-multiple-renames-to-the-same-target-fix later to maint).
+
+ * "git fetch $repo $object" in a partial clone did not correctly
+   fetch the asked-for object that is referenced by an object in
+   promisor packfile, which has been fixed.
+
+ * A corner-case bugfix.
+   (merge c5cbb27cb5 sm/show-superproject-while-conflicted later to maint).
+
+ * Various fixes to "diff --color-moved-ws".
+
+ * A partial clone that is configured to lazily fetch missing objects
+   will on-demand issue a "git fetch" request to the originating
+   repository to fill not-yet-obtained objects.  The request has been
+   optimized for requesting a tree object (and not the leaf blob
+   objects contained in it) by telling the originating repository that
+   no blobs are needed.
+   (merge 4c7f9567ea jt/non-blob-lazy-fetch later to maint).
+
+ * Code cleanup, docfix, build fix, etc.
+   (merge 96a7501aad ts/doc-build-manpage-xsl-quietly later to maint).
+   (merge b9b07efdb2 tg/conflict-marker-size later to maint).
+   (merge fa0aeea770 sg/doc-trace-appends later to maint).
+   (merge d64324cb60 tb/void-check-attr later to maint).
+   (merge c3b9bc94b9 en/double-semicolon-fix later to maint).
+   (merge 79336116f5 sg/t3701-tighten-trace later to maint).
+   (merge 801fa63a90 jk/dev-build-format-security later to maint).
+   (merge 0597dd62ba sb/string-list-remove-unused later to maint).
+   (merge db2d36fad8 bw/protocol-v2 later to maint).
+   (merge 456d7cd3a9 sg/split-index-test later to maint).
+   (merge 7b6057c852 tq/refs-internal-comment-fix later to maint).
+   (merge 29e8dc50ad tg/t5551-with-curl-7.61.1 later to maint).
+   (merge 55f6bce2c9 fe/doc-updates later to maint).
+   (merge 7987d2232d jk/check-everything-connected-is-long-gone later to maint).
+   (merge 4ba3c9be47 dz/credential-doc-url-matching-rules later to maint).
+   (merge 4c399442f7 ma/commit-graph-docs later to maint).
+   (merge fc0503b04e ma/t1400-undebug-test later to maint).
+   (merge e56b53553a nd/packobjectshook-doc-fix later to maint).
+   (merge c56170a0c4 ma/mailing-list-address-in-git-help later to maint).
+   (merge 6e8fc70fce rs/sequencer-oidset-insert-avoids-dups later to maint).
+   (merge ad0b8f9575 mw/doc-typofixes later to maint).
+   (merge d9f079ad1a jc/how-to-document-api later to maint).

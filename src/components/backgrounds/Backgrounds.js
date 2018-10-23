@@ -28,7 +28,8 @@ class Backgrounds extends Component {
     render(){
         const backgrounds = this.state.backgrounds
         const currentBackground =_.find(backgrounds, {'pathname' : this.props.location.pathname})
-        const currentBackgroundID = currentBackground.id
+        const currentBackgroundID = currentBackground.id;
+        console.loc(this.props.location.pathname)
 
         return(
             <div className="backgrounds">
