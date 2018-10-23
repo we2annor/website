@@ -1,0 +1,54 @@
+.page {
+    &.projects {
+        .page-card {
+            section {
+                &.crypto {
+                    .content {
+                        .image {
+                            img {
+                                display: block;
+                            }
+
+                            @media(max-width: 999px){
+                                border-bottom: 1px solid #e5e5e5;
+                                margin-bottom: 30px;
+                            }
+                        }
+
+                        .app-store {
+                            a {
+                                display: block;
+                                width: 150px;
+
+                                img {
+                                    width: 100%;
+                                }
+                            }
+
+                            @media(max-width: 999px){
+                                border-top: 1px solid #e5e5e5;
+
+                                a {
+                                    margin: auto;
+                                    margin-left: 45px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+[data-page="/projects"]{
+    #pages {
+        bottom: 0;
+    }
+
+    footer {
+        @media(min-height: 600px){
+            position: relative;
+        }
+    }
+}

@@ -1,0 +1,103 @@
+
+@import '../_utils';
+
+.page {
+    &.experience {
+        .page-card {
+            section {
+                &.delivery {
+                    padding-bottom: 50px;
+
+                    .content {
+                        .text-3 {
+                            .inner {
+                                padding-left: 40px;
+                                padding-right: 40px;
+
+                                p {
+                                    margin-bottom: 40px;
+                                }
+                            }
+                        }
+                    }
+
+                    @media(min-width: 1000px){
+                        .content {
+                            .text-3 {
+                                float: left;
+                                width: 33.33%;
+
+                                .inner {
+                                    padding: 40px;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &.dev-list {
+                    display: block;
+
+                    .lists {
+                        padding: 20px;
+
+                        .list {
+                            padding: 20px;
+                            list-style: none;
+
+                            li {
+                                &.title {
+                                    font-weight: 400;
+                                }
+
+                                margin-bottom: 10px;
+                            }
+                        }
+                    }
+
+                    @media(max-width: 999px){
+                        .lists {
+                            .list {
+                                &:not(:first-child){
+                                    border-top: 1px solid #e5e5e5;
+                                }
+                            }
+                        }
+                    }
+
+                    @media(min-width: 1000px){
+                        .lists {
+                            margin: auto;
+                            max-width: 1200px;
+
+                            .list {
+                                float: left;
+                                width: 180px;
+                                height: 230px;
+                                padding: 20px;
+                                margin-top: 30px;
+                                margin-bottom: 20px;
+                                margin-left: 40px;
+                                margin-right: 40px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+[data-page="/experience"]{
+    #pages {
+        @media(min-height: 600px){
+            bottom: 0
+        }
+    }
+
+    footer {
+        @media(min-height: 600px){
+            position: relative;
+        }
+    }
+}

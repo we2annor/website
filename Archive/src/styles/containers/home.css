@@ -1,0 +1,110 @@
+* html .group {
+  zoom: 1;
+  border: 1px solid red; }
+
+*:first-child + html .group {
+  zoom: 1; }
+
+.group:after {
+  visibility: hidden;
+  display: block;
+  content: "";
+  clear: both;
+  height: 0; }
+
+.no-wrap {
+  white-space: nowrap; }
+
+.box {
+  display: table; }
+  .box .box-middle {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+    height: 100%; }
+
+.page.home .main-links {
+  width: 100%;
+  height: 90%; }
+  .page.home .main-links .bio {
+    position: absolute;
+    top: 50px;
+    width: 100%; }
+    .page.home .main-links .bio .content {
+      width: 80%;
+      margin: auto;
+      top: 0;
+      color: #ffffff;
+      font-size: 1.2em;
+      font-weight: 400; }
+  .page.home .main-links .link {
+    display: block;
+    margin: auto;
+    text-align: center;
+    opacity: 0.6;
+    -webkit-transition: opacity 0.3s;
+    -moz-transition: opacity 0.3s;
+    -o-transition: opacity 0.3s;
+    transition: opacity 0.3;
+    cursor: pointer;
+    color: #ffffff; }
+    .page.home .main-links .link .link-content {
+      position: relative;
+      display: inline-block;
+      padding: 30px;
+      padding-top: 80px;
+      padding-bottom: 80px;
+      -webkit-transition: transform 0.5s;
+      -moz-transition: transform 0.5s;
+      -o-transition: transform 0.5s;
+      transition: transform 0.5s;
+      transform: scale(0.97); }
+      .page.home .main-links .link .link-content .number {
+        float: left;
+        margin-right: 10px;
+        font-size: 2em;
+        font-weight: 900; }
+      .page.home .main-links .link .link-content .title {
+        display: inline-block; }
+        .page.home .main-links .link .link-content .title .label {
+          font-size: 2em;
+          font-weight: 300; }
+        .page.home .main-links .link .link-content .title .description {
+          font-weight: 300;
+          margin-top: 10px; }
+    .page.home .main-links .link:hover {
+      opacity: 1; }
+      .page.home .main-links .link:hover .link-content {
+        transform: scale(1); }
+    @media (max-width: 400px) {
+      .page.home .main-links .link {
+        opacity: 1; } }
+    @media (max-width: 1099px) {
+      .page.home .main-links .link {
+        width: 100%;
+        max-width: 320px; }
+        .page.home .main-links .link.my-history {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+        .page.home .main-links .link.my-experienc {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2); } }
+    @media (min-width: 1100px) {
+      .page.home .main-links .link {
+        display: inline-block; }
+        .page.home .main-links .link .link-content {
+          padding-left: 50px;
+          padding-right: 50px; }
+          .page.home .main-links .link .link-content .number {
+            font-size: 2.4em; }
+          .page.home .main-links .link .link-content .title {
+            text-align: center; }
+            .page.home .main-links .link .link-content .title .label {
+              font-size: 2.4em; }
+        .page.home .main-links .link.my-history {
+          border-right: 1px solid rgba(255, 255, 255, 0.2); }
+        .page.home .main-links .link.my-experience {
+          border-right: 1px solid rgba(255, 255, 255, 0.2); } }
+    @media (min-width: 1300px) {
+      .page.home .main-links .link .link-content {
+        padding-left: 70px;
+        padding-right: 70px; } }

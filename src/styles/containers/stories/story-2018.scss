@@ -1,0 +1,13 @@
+@import './_story';
+
+.story {
+    &.story-2018 {
+        text-align: center;
+
+        .content {
+            .get-in-touch {
+                margin-top: 30px;
+            }
+        }
+    }
+}

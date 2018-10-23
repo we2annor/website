@@ -1,0 +1,113 @@
+.page {
+    &.projects {
+        .page-card {
+            section {
+                &.crypto {
+                    .content {
+                        .image {
+                            img {
+                                display: block;
+                            }
+
+                            @media(max-width: 999px){
+                                border-bottom: 1px solid #e5e5e5;
+                                margin-bottom: 30px;
+                            }
+                        }
+
+                        .app-store {
+                            a {
+                                display: block;
+                                width: 150px;
+
+                                img {
+                                    width: 100%;
+                                }
+                            }
+
+                            @media(max-width: 999px){
+                                border-top: 1px solid #e5e5e5;
+
+                                a {
+                                    margin: auto;
+                                    margin-left: 45px;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &.moto{
+                    .content{
+                        .image{
+                            img{
+                                display: block;
+                            }
+
+                            @media(max-width: 999px) {
+                                border-bottom: 1px solid #e5e5e5;
+                                margin-bottom: 30px;
+                            }
+                        }
+
+                        .app-store{
+                            a{
+                                display: block;
+                                width: 150px;
+
+                                img{
+                                    width: 100%;
+                                }
+                            }
+
+                            @media(max-width: 999px) {
+                                border-top: 1px solid #e5e5e5;
+
+                                a{
+                                    margin: auto;
+                                    margin-top: 45px;
+                                }
+                            }
+                        }//app-store
+
+                    }//content
+                }//moto
+
+
+                &.get-in-touch{
+                    text-align: center;
+                    padding: 40px;
+
+                    @media(min-width: 500px) {
+                        padding-top: 70px;
+                        padding-bottom: 70px;
+                    }
+
+                    .btn{
+                        padding-left: 50px;
+                        padding-right: 50px;
+
+                        @media(max-width: 500px) {
+                            width: 100%;
+                            padding-left: 0;
+                            padding-right: 0;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+[data-page="/projects"]{
+    #pages {
+        bottom: 0;
+    }
+
+    footer {
+        @media(min-height: 600px){
+            position: relative;
+        }
+    }
+}

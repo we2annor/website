@@ -1,0 +1,15 @@
+@import './_story';
+
+.story {
+    &.story-1982 {
+        text-align: center;
+
+        .content {
+            .next {
+                width: 120px;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+        }
+    }
+}

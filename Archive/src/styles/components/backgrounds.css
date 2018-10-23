@@ -1,0 +1,24 @@
+.backgrounds {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #5C72E9; }
+  .backgrounds .layer {
+    width: 110%;
+    height: 110%;
+    position: absolute; }
+
+.background[data-background="blue"] {
+  background: #4937c7;
+  /* Old browsers */
+  background: -moz-linear-gradient(30deg, #4937c7 0%, #5f64e4 50%, #5f64e4 50%, #30c7ff 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(30deg, #4937c7 0%, #5f64e4 50%, #5f64e4 50%, #30c7ff 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(30deg, #4937c7 0%, #5f64e4 50%, #5f64e4 50%, #30c7ff 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4937c7', endColorstr='#30c7ff',GradientType=1 );
+  /* IE6-9 fallback on horizontal gradient */ }
